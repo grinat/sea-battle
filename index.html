@@ -39,14 +39,13 @@
                 padding:0;
             }
             #gameArea .gameField div{
-                margin: 0;
+                margin: -1px;
                 display: block;
-                float:left;
+				position: relative;
+				float: left;
                 background-color: #fcfcfc;
                 border: 1px solid #a7ddf5;
-                margin: -1px;
                 text-align: center;
-                
                 color: #F44336;
             }
             #gameArea .gameField div .badge{
@@ -80,6 +79,35 @@
         </style>
     </head>
     <body>
+	<script>
+            /**
+            * IE 8 poliffil
+            */
+            if (!Function.prototype.bind) {
+  Function.prototype.bind = function(oThis) {
+    if (typeof this !== 'function') {
+      // closest thing possible to the ECMAScript 5
+      // internal IsCallable function
+      throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
+    }
+
+    var aArgs   = Array.prototype.slice.call(arguments, 1),
+        fToBind = this,
+        fNOP    = function() {},
+        fBound  = function() {
+          return fToBind.apply(this instanceof fNOP && oThis
+                 ? this
+                 : oThis,
+                 aArgs.concat(Array.prototype.slice.call(arguments)));
+        };
+
+    fNOP.prototype = this.prototype;
+    fBound.prototype = new fNOP();
+
+    return fBound;
+  };
+}
+	</script>
         <div id="gameArea"></div>
         <script>
             /**
@@ -129,17 +157,17 @@
                  * Вызывает функции, которые вставляют базовую html разметку
                  * нужную для игры
                  */
-                run(){
+                run: function(){
                     this.createToolbar();
                     this.createGameFields();
                     this.createFooter();
                 },
-                createToolbar(){
+                createToolbar: function(){
                     this.toolbar = document.createElement('div');
                     this.toolbar.setAttribute('class', 'toolbar');
                     this.gameArea.appendChild(this.toolbar);
                 },
-                createGameFields(){
+                createGameFields: function(){
                     var pcGameArea = document.createElement('div');
                     pcGameArea.setAttribute('class', 'pcGameArea');
                     this.gameArea.appendChild(pcGameArea);
@@ -161,7 +189,7 @@
                     pcGameArea.appendChild(this.pcGameField);
                     userGameArea.appendChild(this.userGameField);
                 },
-                createFooter(){
+                createFooter: function(){
                     var footer = document.createElement('div');
                     footer.setAttribute('class', 'footer');
                     
@@ -175,7 +203,7 @@
                     
                     this.gameArea.appendChild(footer);
                 },
-                startNewGame(){
+                startNewGame: function(){
                     this.userName = this.userName || prompt('Ваше имя?', '');
                     this.pcName = this.pcName || prompt('Имя противника', '');
                     
@@ -204,7 +232,7 @@
                 /**
                  * Создание/обновление ячеей в игровых полях
                  */
-                drawGamePoints(){
+                drawGamePoints: function(){
                     for(var yPoint=0;yPoint<this.gameFieldBorderY.length; yPoint++){
                         for(var xPoint=0;xPoint<this.gameFieldBorderX.length; xPoint++){
                             var pcPointBlock = this.getOrCreatePointBlock(yPoint, xPoint);
@@ -234,7 +262,7 @@
                  * Создает либо сбрасывает значения ячеек где размещаются корабли
                  * @return {type}
                  */
-                getOrCreatePointBlock(yPoint, xPoint, type){
+                getOrCreatePointBlock: function(yPoint, xPoint, type){
                     var id = this.getPointBlockIdByCoords(yPoint, xPoint, type);
                     var block = document.getElementById(id);
                     if(block){
@@ -269,7 +297,7 @@
                  * @param {type} type
                  * @return {String}
                  */
-                getPointBlockIdByCoords(yPoint, xPoint, type){
+                getPointBlockIdByCoords: function(yPoint, xPoint, type){
                     if(type && type === 'user'){
                         return 'user_x' + xPoint + '_y' + yPoint;
                     }
@@ -281,7 +309,7 @@
                  * случайно выбирает координаты для обстрела
                  * @return {Array|SeeBattle.prototype.generateShotMap.map}
                  */
-                generateShotMap(){
+                generateShotMap: function(){
                     var map = [];
                     for(var yPoint=0;yPoint<this.gameFieldBorderY.length; yPoint++){
                         for(var xPoint=0;xPoint<this.gameFieldBorderX.length; xPoint++){
@@ -295,7 +323,7 @@
                  * Генерирует массив содержащий информацию о том есть или нет корабля
                  * @return {Array}
                  */
-                generateRandomShipMap(){
+                generateRandomShipMap: function(){
                     var map = [];
                     // генерация карты расположения, вклчающей отрицательный координаты 
                     // для возможности размещения у границ
@@ -340,7 +368,7 @@
                     }
                     return map;
                 },
-                getRandomInt(min, max) {
+                getRandomInt: function(min, max) {
                     return Math.floor(Math.random() * (max - min)) + min;
                 },
                 
@@ -351,7 +379,7 @@
                  * @param {type} yPoint
                  * @return {Boolean}
                  */
-                isPointFree(map, xPoint, yPoint){
+                isPointFree: function(map, xPoint, yPoint){
                     // текущая и далее по часовй стрелке вокруг
                     if(map[yPoint][xPoint] === this.CELL_EMPTY 
                             && map[yPoint-1][xPoint] === this.CELL_EMPTY
@@ -377,7 +405,7 @@
                  * @param {type} coordLength
                  * @return {Boolean}
                  */
-                canPutHorizontal(map, xPoint, yPoint, shipLength, coordLength){
+                canPutHorizontal: function(map, xPoint, yPoint, shipLength, coordLength){
                     var freePoints = 0;
                     for(var x=xPoint;x<coordLength;x++){
                         // текущая и далее по часовй стрелке в гориз направл
@@ -406,7 +434,7 @@
                  * @param {type} coordLength
                  * @return {Boolean}
                  */
-                canPutVertical(map, xPoint, yPoint, shipLength, coordLength){
+                canPutVertical: function(map, xPoint, yPoint, shipLength, coordLength){
                     var freePoints = 0;
                     for(var y=yPoint;y<coordLength;y++){
                         // текущая и далее по часовй стрелке в вертикальном направлении
@@ -429,11 +457,12 @@
                  * Обработчик клика по ячейке
                  * @param {type} e
                  */
-                userFire(e){
+                userFire: function(event){
                     if(this.isGameStopped() || this.isPCGoing()){
                         return;
                     }
-                    var firedEl = e.srcElement || e.target;
+                    var e = event || window.event;
+                    var firedEl = e.target || e.srcElement;
                     var x = firedEl.getAttribute('data-x');
                     var y = firedEl.getAttribute('data-y');
                     if(this._pcShipsMap[y][x] === this.CELL_EMPTY){
@@ -451,7 +480,7 @@
                     firedEl.onclick = null;
                 },
                 _pcGoing: false,
-                isPCGoing(){
+                isPCGoing: function(){
                     return this._pcGoing;
                 },
                 
@@ -459,7 +488,7 @@
                  * Создает задержку перед ходом компьютрера
                  * необходимую, для того чтобы успеть увидеть чей ход
                  */
-                prepareToPcFire(){
+                prepareToPcFire: function(){
                     this._pcGoing = true;
                     this.updateToolbar();
                     setTimeout(function(){
@@ -471,13 +500,13 @@
                  * Выстрел компьютера
                  * 
                  */
-                pcFire(){
+                pcFire: function(){
                     if(this.isGameStopped()){
                         return;
                     }
                     // берется случайный выстрел из сгенерированной ранее карты
                     var randomShotIndex = this.getRandomInt(0, this._pcShotMap.length);
-                    var randomShot = Object.assign({}, this._pcShotMap[randomShotIndex]);
+                    var randomShot = JSON.parse(JSON.stringify(this._pcShotMap[randomShotIndex]));
                     // удаление чтобы не было выстрелов повторных
                     this._pcShotMap.splice(randomShotIndex, 1);
                     
@@ -500,26 +529,26 @@
                 /**
                  * Остановка игры
                  */
-                stopGame(){
+                stopGame: function(){
                     this._gameStopped = true;
                     this._pcGoing = false;
                     this.startGameButton.innerHTML = 'Сыграть еще раз?';
                     this.updateToolbar();
                 },
-                isGameStopped(){
+                isGameStopped: function(){
                     return this._gameStopped;  
                 },
-                getFireSuccessTemplate(){
+                getFireSuccessTemplate: function(){
                     return 'X';
                 },
-                getFireFailTemplate(){
+                getFireFailTemplate: function(){
                     return '&#183;';
                 },
                 
                 /**
                  * Отображение текущей игровой ситуации в блоке
                  */
-                updateToolbar(){
+                updateToolbar: function(){
                     this.toolbar.innerHTML = 'Счет - ' + this._pcHits + ':' + this._userHits;
                     if(this.isGameStopped()){
                         if(this._userHits >= this._hitsForWin){
