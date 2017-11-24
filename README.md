@@ -2,6 +2,8 @@
 
 Открыть index.html (все в одном файле)
 
+[Запустить игру](https://htmlpreview.github.io/?https://github.com/grinat/sea-battle/blob/master/index.html)
+
 # Правила 
 
 Размещаются:
