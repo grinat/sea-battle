@@ -10,13 +10,22 @@
     </head>
     <body>
 
-        <div id="gameArea"></div>
+        <div id="gameArea">
+            <div class="footer htmlpreview-fallback">
+                <button class="btn" onclick="runGame(true)">Начать игру</button>
+            </div>
+        </div>
 
         <script src="index.js"></script>
         <script>
-        window.onload = function() {
+        function runGame(startImmediatly) {
              var game = new SeeBattle('gameArea');
              game.run();
+
+             // fallback для htmlpreview
+             if (startImmediatly) {
+                game.startNewGame();
+             }
         }
         </script>
     </body>

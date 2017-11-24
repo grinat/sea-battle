@@ -45,6 +45,7 @@ if (!Function.prototype.bind) {
         this.gameFieldBorderX = ['A','B','C','D','E','F','G','H','I','J'];
         this.gameFieldBorderY = ['1','2','3','4','5','6','7','8','9','10'];
         this.gameArea = document.getElementById(gameAreaId);
+        this.gameArea.innerHTML = "";
         this.shipsConfiguration = [
             {maxShips: 1, pointCount: 4},
             {maxShips: 2, pointCount: 3},
