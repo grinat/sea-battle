@@ -1,6 +1,6 @@
 # Запуск
 
-Открыть index.html (все в одном файле)
+Открыть index.html
 
 [Запустить игру](https://htmlpreview.github.io/?https://github.com/grinat/sea-battle/blob/master/index.html)
 
